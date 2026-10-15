@@ -2,6 +2,7 @@ package com.example;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -119,6 +120,38 @@ public class MatrizTest {
 
         assertEquals(1.0, matriz.getElemento(0, 0), 0.0);
         assertEquals(3.0, matriz.getElemento(1, 0), 0.0);
+    }
+
+    @Test
+    public void sumarInstanciaSumaMatricesDeIgualDimension() {
+        Matriz matriz = new Matriz(new double[][] {
+                { 1.0, 2.0 },
+                { -3.0, 4.5 }
+        });
+        Matriz resultado = matriz.sumar(new Matriz(new double[][] {
+                { 5.0, -2.0 },
+                { 3.0, 0.5 }
+        }));
+
+        assertArrayEquals(new int[] { 2, 2 }, resultado.getDimension());
+        assertEquals(6.0, resultado.getElemento(0, 0), 0.0);
+        assertEquals(0.0, resultado.getElemento(0, 1), 0.0);
+        assertEquals(0.0, resultado.getElemento(1, 0), 0.0);
+        assertEquals(5.0, resultado.getElemento(1, 1), 0.0);
+    }
+
+    @Test
+    public void sumarInstanciaDevuelveNullParaArgumentoNulo() {
+        Matriz matriz = new Matriz(new double[][] { { 1.0 } });
+
+        assertNull(matriz.sumar(null));
+    }
+
+    @Test
+    public void sumarInstanciaDevuelveNullParaDimensionesDistintas() {
+        Matriz matriz = new Matriz(new double[][] { { 1.0, 2.0 } });
+
+        assertNull(matriz.sumar(new Matriz(new double[][] { { 1.0 }, { 2.0 } })));
     }
 
     private void assertIllegalArgumentException(double[][] valores) {
