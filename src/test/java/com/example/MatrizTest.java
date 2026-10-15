@@ -183,6 +183,22 @@ public class MatrizTest {
         assertNull(Matriz.sumar(primera, segunda));
     }
 
+    @Test
+    public void traspuestaInstanciaIntercambiaFilasYColumnas() {
+        Matriz resultado = new Matriz(new double[][] {
+                { 1.0, 2.0, 3.0 },
+                { 4.0, 5.0, 6.0 }
+        }).traspuesta();
+
+        assertArrayEquals(new int[] { 3, 2 }, resultado.getDimension());
+        assertEquals(1.0, resultado.getElemento(0, 0), 0.0);
+        assertEquals(4.0, resultado.getElemento(0, 1), 0.0);
+        assertEquals(2.0, resultado.getElemento(1, 0), 0.0);
+        assertEquals(5.0, resultado.getElemento(1, 1), 0.0);
+        assertEquals(3.0, resultado.getElemento(2, 0), 0.0);
+        assertEquals(6.0, resultado.getElemento(2, 1), 0.0);
+    }
+
     private void assertIllegalArgumentException(double[][] valores) {
         try {
             new Matriz(valores);
