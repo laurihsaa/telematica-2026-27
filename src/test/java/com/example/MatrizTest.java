@@ -199,6 +199,28 @@ public class MatrizTest {
         assertEquals(6.0, resultado.getElemento(2, 1), 0.0);
     }
 
+    @Test
+    public void traspuestaEstaticoIntercambiaFilasYColumnas() {
+        Matriz resultado = Matriz.traspuesta(new Matriz(new double[][] {
+                { -1.0, 0.0 },
+                { 2.5, 3.0 },
+                { 4.0, 5.0 }
+        }));
+
+        assertArrayEquals(new int[] { 2, 3 }, resultado.getDimension());
+        assertEquals(-1.0, resultado.getElemento(0, 0), 0.0);
+        assertEquals(2.5, resultado.getElemento(0, 1), 0.0);
+        assertEquals(4.0, resultado.getElemento(0, 2), 0.0);
+        assertEquals(0.0, resultado.getElemento(1, 0), 0.0);
+        assertEquals(3.0, resultado.getElemento(1, 1), 0.0);
+        assertEquals(5.0, resultado.getElemento(1, 2), 0.0);
+    }
+
+    @Test
+    public void traspuestaEstaticoDevuelveNullParaMatrizNula() {
+        assertNull(Matriz.traspuesta(null));
+    }
+
     private void assertIllegalArgumentException(double[][] valores) {
         try {
             new Matriz(valores);
