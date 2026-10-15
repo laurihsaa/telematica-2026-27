@@ -154,6 +154,35 @@ public class MatrizTest {
         assertNull(matriz.sumar(new Matriz(new double[][] { { 1.0 }, { 2.0 } })));
     }
 
+    @Test
+    public void sumarEstaticoSumaMatricesDeIgualDimension() {
+        Matriz resultado = Matriz.sumar(
+                new Matriz(new double[][] { { 1.0, 2.0 }, { 3.0, 4.0 } }),
+                new Matriz(new double[][] { { 5.0, 6.0 }, { 7.0, 8.0 } }));
+
+        assertArrayEquals(new int[] { 2, 2 }, resultado.getDimension());
+        assertEquals(6.0, resultado.getElemento(0, 0), 0.0);
+        assertEquals(8.0, resultado.getElemento(0, 1), 0.0);
+        assertEquals(10.0, resultado.getElemento(1, 0), 0.0);
+        assertEquals(12.0, resultado.getElemento(1, 1), 0.0);
+    }
+
+    @Test
+    public void sumarEstaticoDevuelveNullSiUnaMatrizEsNula() {
+        Matriz matriz = new Matriz(new double[][] { { 1.0 } });
+
+        assertNull(Matriz.sumar(null, matriz));
+        assertNull(Matriz.sumar(matriz, null));
+    }
+
+    @Test
+    public void sumarEstaticoDevuelveNullParaDimensionesDistintas() {
+        Matriz primera = new Matriz(new double[][] { { 1.0, 2.0 } });
+        Matriz segunda = new Matriz(new double[][] { { 1.0 }, { 2.0 } });
+
+        assertNull(Matriz.sumar(primera, segunda));
+    }
+
     private void assertIllegalArgumentException(double[][] valores) {
         try {
             new Matriz(valores);

@@ -104,6 +104,21 @@ public class Matriz {
     }
 
     /**
+     * Suma dos matrices de las mismas dimensiones.
+     *
+     * @param primera primera matriz que se va a sumar
+     * @param segunda segunda matriz que se va a sumar
+     * @return la suma, o null si alguna matriz es null o sus dimensiones difieren
+     */
+    public static Matriz sumar(Matriz primera, Matriz segunda) {
+        if (primera == null) {
+            return null;
+        }
+
+        return primera.sumar(segunda);
+    }
+
+    /**
      * Devuelve una representación textual de la matriz.
      */
     @Override
