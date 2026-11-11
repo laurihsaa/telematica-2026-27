@@ -45,4 +45,21 @@ public class PoliticaPrecioTest {
     public void factoriaRechazaUnaPoliticaDesconocida() {
         FactoriaPoliticas.getPolitica("Desconocida");
     }
+
+    @Test
+    public void todasLasPoliticasRechazanDuracionesNoPositivas() {
+        for (PoliticasDePrecios politica : PoliticasDePrecios.values()) {
+            try {
+                FactoriaPoliticas.getPolitica(politica).calcularPrecio(50, 0);
+                org.junit.Assert.fail("Se debe rechazar una duración de cero: " + politica);
+            } catch (IllegalArgumentException expected) {
+                assertEquals("La duración del alquiler debe ser positiva", expected.getMessage());
+            }
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void rechazaUnPrecioBaseNegativo() {
+        new PrecioNormal().calcularPrecio(-1, 1);
+    }
 }
