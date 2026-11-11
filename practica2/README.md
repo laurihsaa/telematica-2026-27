@@ -31,3 +31,10 @@ Los ejercicios se desarrollaron en ramas y se fusionaron en `main`:
 - `ejercicio-5-6-gestor-json`: operaciones del gestor, persistencia y pruebas.
 
 Para comprobar la entrega, ejecuta `mvn test` desde esta carpeta.
+
+## Mejoras verificadas
+
+Las ramas `mejora-estrategias-entradas` y `mejora-integridad-gestor` añaden
+validación de precios, protección frente a referencias ajenas y rechazo de
+ficheros con alquileres activos duplicados. Las pruebas también verifican
+que una recuperación inválida no modifica los datos existentes.
