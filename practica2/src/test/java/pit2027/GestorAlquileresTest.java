@@ -7,7 +7,11 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.LocalDate;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -68,6 +72,16 @@ public class GestorAlquileresTest {
                 LocalDate.of(2026, 1, 2), LocalDate.of(2026, 1, 2)));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void noPermiteRegistrarUnAlquilerDeUnClienteAjenoAlGestor() {
+        GestorAlquileres gestor = new GestorAlquileres();
+        Vehiculo vehiculo = gestor.obtenerVehiculos("Turismo")[0];
+        Cliente clienteAjeno = new Cliente("Cliente externo", "EXT");
+
+        gestor.agregarAlquiler(new Alquiler(vehiculo, clienteAjeno,
+                LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 1)));
+    }
+
     @Test
     public void guardaYRecuperaClientesVehiculosAlquileresYDisponibilidad() throws Exception {
         GestorAlquileres original = new GestorAlquileres();
@@ -93,5 +107,34 @@ public class GestorAlquileresTest {
                 alquileres[0].getVehiculo());
         assertFalse(alquileres[0].getVehiculo().isDisponible());
         assertNotSame(original.obtenerClientes()[0], recuperado.obtenerClientes()[0]);
+    }
+
+    @Test
+    public void rechazaDosAlquileresActivosDelMismoVehiculoSinCambiarElGestor() throws Exception {
+        GestorAlquileres original = new GestorAlquileres();
+        Cliente cliente = original.obtenerClientes()[0];
+        Vehiculo vehiculo = original.obtenerVehiculos("Turismo", Categoria.NORMAL)[0];
+        original.agregarAlquiler(new Alquiler(vehiculo, cliente,
+                LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 1)));
+        File fichero = temporaryFolder.newFile("datos-duplicados.json");
+        original.guardarDatos(fichero.getAbsolutePath());
+
+        JSONObject datos = new JSONObject(new String(
+                Files.readAllBytes(fichero.toPath()), StandardCharsets.UTF_8));
+        JSONArray alquileres = datos.getJSONArray("alquileres");
+        alquileres.put(new JSONObject(alquileres.getJSONObject(0).toString()));
+        Files.write(fichero.toPath(), datos.toString(2).getBytes(StandardCharsets.UTF_8));
+
+        GestorAlquileres destino = new GestorAlquileres();
+        Cliente[] clientesAntes = destino.obtenerClientes();
+        Vehiculo[] vehiculosAntes = destino.obtenerTodosLosVehiculos();
+        try {
+            destino.cargarDatos(fichero.getAbsolutePath());
+            org.junit.Assert.fail("Se deben rechazar alquileres activos duplicados");
+        } catch (IllegalArgumentException expected) {
+            assertEquals(0, destino.obtenerAlquileres().length);
+            assertSame(clientesAntes[0], destino.obtenerClientes()[0]);
+            assertSame(vehiculosAntes[0], destino.obtenerTodosLosVehiculos()[0]);
+        }
     }
 }

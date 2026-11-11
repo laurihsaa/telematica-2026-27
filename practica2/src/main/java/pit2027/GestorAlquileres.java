@@ -8,9 +8,11 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -71,6 +73,12 @@ public class GestorAlquileres {
 
     public void agregarAlquiler(Alquiler alquiler) {
         Objects.requireNonNull(alquiler, "El alquiler no puede ser null");
+        if (!clientes.contains(alquiler.getCliente())) {
+            throw new IllegalArgumentException("El cliente no pertenece a este gestor");
+        }
+        if (!vehiculos.contains(alquiler.getVehiculo())) {
+            throw new IllegalArgumentException("El vehículo no pertenece a este gestor");
+        }
         if (!alquiler.getVehiculo().isDisponible()) {
             throw new IllegalStateException("El vehículo no está disponible");
         }
@@ -161,6 +169,7 @@ public class GestorAlquileres {
         }
 
         List<Alquiler> nuevosAlquileres = new ArrayList<>();
+        Set<String> vehiculosOcupados = new HashSet<>();
         JSONArray jsonAlquileres = datos.getJSONArray("alquileres");
         for (int i = 0; i < jsonAlquileres.length(); i++) {
             JSONObject jsonAlquiler = jsonAlquileres.getJSONObject(i);
@@ -172,7 +181,18 @@ public class GestorAlquileres {
                 throw new IllegalArgumentException(
                         "El alquiler hace referencia a un cliente o vehículo inexistente");
             }
-            nuevosAlquileres.add(FactoriaAlquileres.getAlquiler(jsonAlquiler, cliente, vehiculo));
+            Alquiler alquiler = FactoriaAlquileres.getAlquiler(jsonAlquiler, cliente, vehiculo);
+            if (!alquiler.isDevuelto()) {
+                if (!vehiculosOcupados.add(matricula)) {
+                    throw new IllegalArgumentException(
+                            "Hay más de un alquiler activo para el vehículo: " + matricula);
+                }
+                if (vehiculo.isDisponible()) {
+                    throw new IllegalArgumentException(
+                            "Un vehículo con un alquiler activo no puede figurar disponible: " + matricula);
+                }
+            }
+            nuevosAlquileres.add(alquiler);
         }
 
         clientes.clear();
