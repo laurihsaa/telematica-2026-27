@@ -1,0 +1,42 @@
+package pit2027;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+public class PoliticaPrecioTest {
+    @Test
+    public void precioNormalMultiplicaBasePorDias() {
+        assertEquals(200.0, new PrecioNormal().calcularPrecio(50, 4), 0.0);
+    }
+
+    @Test
+    public void temporadaAltaDuplicaPrecioDiario() {
+        assertEquals(400.0, new PrecioTemporadaAlta().calcularPrecio(50, 4), 0.0);
+    }
+
+    @Test
+    public void ofertaAplicaDescuentoDiarioYDescuentoAdicionalDesdeOchoDias() {
+        assertEquals(245.0, new PrecioOferton().calcularPrecio(50, 7), 0.0);
+        assertEquals(252.0, new PrecioOferton().calcularPrecio(50, 8), 0.0);
+    }
+
+    @Test
+    public void clienteFrecuenteAplicaDosTramosDeDescuento() {
+        assertEquals(120.0, new PrecioClienteFrecuente().calcularPrecio(50, 3), 0.0);
+        assertEquals(150.0, new PrecioClienteFrecuente().calcularPrecio(50, 4), 0.0);
+    }
+
+    @Test
+    public void factoriaCreaLaEstrategiaSolicitada() {
+        assertEquals(200.0,
+                FactoriaPoliticas.getPolitica(PoliticasDePrecios.Normal).calcularPrecio(50, 4), 0.0);
+        assertEquals(252.0,
+                FactoriaPoliticas.getPolitica("Oferton").calcularPrecio(50, 8), 0.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void factoriaRechazaUnaPoliticaDesconocida() {
+        FactoriaPoliticas.getPolitica("Desconocida");
+    }
+}
