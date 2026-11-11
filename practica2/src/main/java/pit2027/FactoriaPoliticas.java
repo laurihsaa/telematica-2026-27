@@ -24,11 +24,12 @@ public final class FactoriaPoliticas {
 
     public static PoliticaPrecio getPolitica(String nombre) {
         Objects.requireNonNull(nombre, "El nombre de la política no puede ser null");
-        try {
-            return getPolitica(PoliticasDePrecios.valueOf(nombre));
-        } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("Política de precios desconocida: " + nombre, exception);
+        for (PoliticasDePrecios politica : PoliticasDePrecios.values()) {
+            if (politica.name().equalsIgnoreCase(nombre.trim())) {
+                return getPolitica(politica);
+            }
         }
+        throw new IllegalArgumentException("Política de precios desconocida: " + nombre);
     }
 
     public static void main(String[] args) {
