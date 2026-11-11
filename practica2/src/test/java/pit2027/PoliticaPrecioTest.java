@@ -29,10 +29,16 @@ public class PoliticaPrecioTest {
 
     @Test
     public void factoriaCreaLaEstrategiaSolicitada() {
-        assertEquals(200.0,
-                FactoriaPoliticas.getPolitica(PoliticasDePrecios.Normal).calcularPrecio(50, 4), 0.0);
-        assertEquals(252.0,
-                FactoriaPoliticas.getPolitica("Oferton").calcularPrecio(50, 8), 0.0);
+        assertEquals(200.0, FactoriaPoliticas.getPolitica(PoliticasDePrecios.Normal)
+                .calcularPrecio(50, 4), 0.0);
+        assertEquals(800.0, FactoriaPoliticas.getPolitica(PoliticasDePrecios.TemporadaAlta)
+                .calcularPrecio(50, 8), 0.0);
+        assertEquals(270.0, FactoriaPoliticas.getPolitica(PoliticasDePrecios.ClienteFrecuente)
+                .calcularPrecio(50, 8), 0.0);
+        assertEquals(252.0, FactoriaPoliticas.getPolitica(PoliticasDePrecios.Oferton)
+                .calcularPrecio(50, 8), 0.0);
+        assertEquals(252.0, FactoriaPoliticas.getPolitica(" ofertON ")
+                .calcularPrecio(50, 8), 0.0);
     }
 
     @Test(expected = IllegalArgumentException.class)
