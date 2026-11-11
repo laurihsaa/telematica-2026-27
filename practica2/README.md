@@ -20,3 +20,14 @@ registradas del cliente y del vehículo.
 Las tarifas base aplican a las tres subclases los valores por categoría que aparecen
 en el ejemplo del enunciado para Turismo: 50 (Normal), 80 (Especial) y 100 (Superior).
 Las estrategias de precio pueden probarse por separado con `pit2027.FactoriaPoliticas`.
+
+## Ramas de la práctica
+
+Los ejercicios se desarrollaron en ramas y se fusionaron en `main`:
+
+- `ejercicio-2-estrategia`: políticas de precio y sus pruebas.
+- `ejercicio-3-factoria-json`: factorías de clientes, vehículos y alquileres.
+- `ejercicio-4-factoria-politicas`: factoría de políticas y pruebas de selección.
+- `ejercicio-5-6-gestor-json`: operaciones del gestor, persistencia y pruebas.
+
+Para comprobar la entrega, ejecuta `mvn test` desde esta carpeta.
